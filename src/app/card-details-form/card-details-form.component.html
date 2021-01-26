@@ -1,0 +1,180 @@
+<div class="row">
+  <div class="col-25">
+    <div class="container">
+      <form [formGroup]="cardDetailsForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-50">
+            <h3>Payment</h3>
+            <!-- Credit card label -->
+            <div class="required-field">
+              <label>Credit Card Number</label>
+              <input
+                type="text"
+                formControlName="cardNumber"
+                placeholder="1111 2222 3333 4444"
+                maxlength="19"
+                minlength="9"
+                appCreditCard
+                required
+              />
+              <div
+                class="error"
+                *ngIf="
+                  cardDetailsForm.get('cardNumber').hasError('required') &&
+                  (cardDetailsForm.get('cardNumber').touched ||
+                    cardDetailsForm.get('cardNumber').dirty)
+                "
+              >
+                Card Number is required
+              </div>
+              <div
+                class="error"
+                *ngIf="cardDetailsForm.get('cardNumber').hasError('minlength')"
+              >
+                Card Number should have minimum of 9 characters<span *ngIf="cardDetailsForm.get('cardNumber').hasError('pattern')">.Numbers only</span>
+              </div>
+              <div
+              class="error"
+              *ngIf="!cardDetailsForm.get('cardNumber').hasError('minlength') && cardDetailsForm.get('cardNumber').hasError('pattern')"
+            >
+              Only Numbers are allowed
+            </div>
+            </div>
+            <!-- Card Holder -->
+            <div class="required-field">
+              <label>Card Holder</label>
+              <input
+                type="text"
+                formControlName="cardHolder"
+                minlength="4"
+                maxlength="32"
+                required
+              />
+              <div
+                class="error"
+                *ngIf="
+                  cardDetailsForm.get('cardHolder').hasError('required') &&
+                  (cardDetailsForm.get('cardHolder').touched ||
+                    cardDetailsForm.get('cardHolder').dirty)
+                "
+              >
+                Card Holder Name is required
+              </div>
+              <div
+              class="error"
+              *ngIf="
+                cardDetailsForm.get('cardHolder').hasError('minlength')
+              "
+            >
+              Name must have minimum 4 characters <span *ngIf="cardDetailsForm.get('cardHolder').hasError('pattern')">and Name can have Alphabets, Space and apostrophe(')</span>
+            </div>
+              <div
+              class="error"
+              *ngIf="!cardDetailsForm.get('cardHolder').hasError('minlength') &&
+                cardDetailsForm.get('cardHolder').hasError('pattern')
+              "
+            >
+              Name can have Alphabets, Space and apostrophe(')
+            </div>
+            </div>
+            <!-- Expiry Date of the card -->
+            <div class="required-field">
+              <label>Expiration Date</label>
+              <input
+                class="date-label-input"
+                matInput
+                [matDatepicker]="picker"
+                formControlName="expiryDate"
+                [min]="requiredDate"
+                readonly
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <div
+                class="error"
+                *ngIf="
+                  cardDetailsForm.get('expiryDate').hasError('required') &&
+                  (cardDetailsForm.get('expiryDate').touched ||
+                    cardDetailsForm.get('expiryDate').dirty)
+                "
+              >
+                Enter the Expiry Date
+              </div>
+              <div
+                class="error"
+                *ngIf="cardDetailsForm.controls['expiryDate'].errors?.minDate"
+              >
+                Expiry Date of the card should be in the future
+              </div>
+            </div>
+            <!-- Security Code -->
+            <div>
+              <label>Security Code</label>
+              <input
+                class="label-input"
+                formControlName="securityCode"
+                minlength="3"
+                maxlength="3"
+              />
+              <div
+              class="error"
+              *ngIf="cardDetailsForm.controls['securityCode'].errors?.minlength"
+            >
+              Security code must contain 3 digits
+            </div>
+            <div
+            class="error"
+            *ngIf="cardDetailsForm.controls['securityCode'].errors?.pattern"
+          >
+            Security code must have Numbers only
+          </div>
+            </div>
+            <!-- Amount -->
+            <div class="required-field">
+              <label>Amount</label>
+              <input
+                class="label-input"
+                type="number"
+                formControlName="amount"
+                min="0"
+                required
+              />
+              <div
+                class="error"
+                *ngIf="
+                  cardDetailsForm.get('amount').hasError('required') &&
+                  (cardDetailsForm.get('amount').touched ||
+                    cardDetailsForm.get('amount').dirty)
+                "
+              >
+                Enter the Amount
+              </div>
+              <div
+                class="error"
+                *ngIf="cardDetailsForm.get('amount').value < 0"
+              >
+                Please enter the amount correctly (eg: 123)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="submit-label">
+          <button
+            mat-raised-button
+            color="accent"
+            [disabled]="
+              !this.cardDetailsForm.valid ||
+              cardDetailsForm.get('amount').value <= 0
+            "
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
